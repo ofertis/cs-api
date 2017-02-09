@@ -1,4 +1,4 @@
-# CORE-SYSTEM LOCALE
+# CS-API
 
 Library to access Ceska sporitelna Netbanking V3 API
  

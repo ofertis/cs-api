@@ -11,7 +11,7 @@ class AccountTransactionHistory extends CSApi
      *
      * @return object
      */
-    public function getApiData($account, array $parametersArray = [])
+    public function apiRequest($account, array $parametersArray = [])
     {
         $parameters = http_build_query($parametersArray);
         $url = str_replace(['{account}', '{parameters}'], [$account, $parameters], $this->config['urlTransactions']);
