@@ -1,0 +1,20 @@
+{
+    "name": "zbynek/cs-api",
+    "description": "Library to access Ceska sporitelna Netbanking V3 API",
+    "type": "package",
+    "authors": [
+        {
+            "name": "Zbyněk Mrozek",
+            "email": "zbynek.mrozek@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "league/oauth2-client": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "CSApi\\": "src/"
+        }
+    }
+}
