@@ -51,5 +51,5 @@ abstract class CSApi
      *
      * @return object
      */
-    protected abstract function getApiData($account, array $parametersArray = []);
+    protected abstract function apiRequest($account, array $parametersArray = []);
 }

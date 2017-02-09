@@ -34,8 +34,10 @@ class OAuthAuthorization
         {
             $accessToken = unserialize($_SESSION['accessToken']);
 
+            // Check if the access token has expired
             if($accessToken->hasExpired())
             {
+                // Check if the refresh token is null
                 if($accessToken->getRefreshToken())
                 {
                     $accessToken = self::refreshAccessToken($provider, $accessToken);
