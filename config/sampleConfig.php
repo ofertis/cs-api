@@ -32,13 +32,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | URL required to access specific parts of API
+    | URLs required to access specific parts of API
     |
     | Note the bracketed {account} and {parameters}, these will be substituted
     | during API calls for variables supplied by you
     |--------------------------------------------------------------------------
     */
 
-    'urlTransactions'         => 'https://api.csas.cz/sandbox/webapi/api/v1/netbanking/my/accounts/{account}/transactions?{parameters}',
+    'urlTransactionHistory' => 'https://api.csas.cz/sandbox/webapi/api/v1/netbanking/my/accounts/%s/transactions?%s',
+    'urlTransactions' => 'https://api.csas.cz/sandbox/webapi/api/v3/netbanking/my/accounts/%s/transactions/%s',
 
 ];

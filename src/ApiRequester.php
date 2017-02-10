@@ -1,20 +1,20 @@
 <?php namespace CSApi;
 
 
-class AccountTransactionHistory extends CSApi
+class ApiRequester extends CSApi
 {
     /**
      * Requests transaction history
      *
-     * @param string $account
+     * @param string $apiUrl
      * @param array $parametersArray
+     * @param array $postData
      *
      * @return object
      */
-    public function apiRequest($account, array $parametersArray = [])
+    public function apiRequest($apiUrl, array $parametersArray = [], array $postData = null)
     {
-        $parameters = http_build_query($parametersArray);
-        $url = str_replace(['{account}', '{parameters}'], [$account, $parameters], $this->config['urlTransactions']);
+        $url = vsprintf($this->config[$apiUrl], $this->buildQuery($parametersArray));
         $authorizationToken = $this->accessToken->getValues()['token_type'] . ' ' . $this->accessToken->getToken();
 
         $ch = curl_init();
@@ -26,7 +26,13 @@ class AccountTransactionHistory extends CSApi
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
+        if(isset($postData)){
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            isset($postData) ? "Content-Type: application/json" : "",
             "WEB-API-key: " . $this->config['webApiKey'],
             "Authorization: " . $authorizationToken
         ));
@@ -39,5 +45,20 @@ class AccountTransactionHistory extends CSApi
         curl_close($ch);
 
         return json_decode($response);
+    }
+
+    /**
+     * Transforms inner array of 'query' key into http query
+     *
+     * @param array $arr
+     *
+     * @return array
+     */
+    protected function buildQuery(array $arr)
+    {
+        if(isset($arr['query'])){
+            $arr['query'] = http_build_query($arr['query']);
+        }
+        return $arr;
     }
 }

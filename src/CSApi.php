@@ -48,8 +48,9 @@ abstract class CSApi
      *
      * @param string $account
      * @param array $parametersArray
+     * @param array $postData
      *
      * @return object
      */
-    protected abstract function apiRequest($account, array $parametersArray = []);
+    protected abstract function apiRequest($account, array $parametersArray = [], array $postData = null);
 }
