@@ -43,7 +43,7 @@ $urlParameters = [
 $response = $csApi->apiRequest($apiUrl, $urlParameters);
 ```
 
-> Requests account transaction history and returns data object (API response run through json_decode),
+> Requests account transaction history and returns JSON response,
 > Content of 'query' key will be transformed into http query.
 
 ```php
@@ -61,6 +61,6 @@ $postData = [
 $response = $csApi->apiRequest($apiUrl, $urlParameters, $postData);
 ```
 
-> Adds/changes a client's personal note and returns a response.
+> Adds/changes a client's personal note and returns a JSON response.
 
 

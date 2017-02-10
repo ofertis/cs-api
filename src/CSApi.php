@@ -50,7 +50,7 @@ abstract class CSApi
      * @param array $urlParameters
      * @param array $postData
      *
-     * @return object
+     * @return string
      */
     protected abstract function apiRequest($apiUrl, array $urlParameters = [], array $postData = null);
 }
