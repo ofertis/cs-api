@@ -44,13 +44,13 @@ abstract class CSApi
     }
 
     /**
-     * Requests data from API
+     * Sends a request to API server
      *
-     * @param string $account
-     * @param array $parametersArray
+     * @param string $apiUrl
+     * @param array $urlParameters
      * @param array $postData
      *
      * @return object
      */
-    protected abstract function apiRequest($account, array $parametersArray = [], array $postData = null);
+    protected abstract function apiRequest($apiUrl, array $urlParameters = [], array $postData = null);
 }

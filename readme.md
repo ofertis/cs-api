@@ -1,6 +1,6 @@
 # CS-API
 
-Library to access Ceska sporitelna Netbanking V3 API
+Library for accessing Ceska sporitelna API
  
 ## Summary
 

@@ -10,7 +10,7 @@ return [
 
     'clientId'                => 'WebExpoClient',
     'clientSecret'            => '201509201300',
-    'webApiKey'               => '8c18ff92-8c1c-44b6-8b0c-08e19d206fcf',
+    'webApiKey'               => '35bd5a35-5909-460e-b3c2-20073d9c4c2e',
 
     /*
     |--------------------------------------------------------------------------

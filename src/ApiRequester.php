@@ -4,18 +4,24 @@
 class ApiRequester extends CSApi
 {
     /**
-     * Requests transaction history
+     * Sends a request to API server
      *
      * @param string $apiUrl
-     * @param array $parametersArray
+     * @param array $urlParameters
      * @param array $postData
      *
      * @return object
      */
-    public function apiRequest($apiUrl, array $parametersArray = [], array $postData = null)
+    public function apiRequest($apiUrl, array $urlParameters = [], array $postData = null)
     {
-        $url = vsprintf($this->config[$apiUrl], $this->buildQuery($parametersArray));
-        $authorizationToken = $this->accessToken->getValues()['token_type'] . ' ' . $this->accessToken->getToken();
+        $tokenType = $this->accessToken->getValues()['token_type'];
+        $accessToken = $this->accessToken->getToken();
+
+        $url = vsprintf($this->config[$apiUrl], $this->buildQuery($urlParameters));
+        $postFields = json_encode($postData);
+        $httpHeader[] = "WEB-API-key: " . $this->config['webApiKey'];
+        $httpHeader[] = "Authorization: " . $tokenType . ' ' . $accessToken;
+        $httpHeader[] = isset($postData) ? "Content-Type: application/json" : "";
 
         $ch = curl_init();
 
@@ -28,14 +34,10 @@ class ApiRequester extends CSApi
 
         if(isset($postData)){
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            isset($postData) ? "Content-Type: application/json" : "",
-            "WEB-API-key: " . $this->config['webApiKey'],
-            "Authorization: " . $authorizationToken
-        ));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $httpHeader);
 
         $response = curl_exec($ch);
 
