@@ -34,12 +34,12 @@ return [
     |--------------------------------------------------------------------------
     | URLs required to access specific parts of API
     |
-    | Note the bracketed {account} and {parameters}, these will be substituted
-    | during API calls for variables supplied by you
+    | Add as many API request URLs from CS API documentation as you need.
+    | Use '%s' to mark parameters you want to assign dynamically.
     |--------------------------------------------------------------------------
     */
 
     'urlTransactionHistory' => 'https://api.csas.cz/sandbox/webapi/api/v1/netbanking/my/accounts/%s/transactions?%s',
-    'urlTransactions' => 'https://api.csas.cz/sandbox/webapi/api/v3/netbanking/my/accounts/%s/transactions/%s',
+    'urlTransactions'       => 'https://api.csas.cz/sandbox/webapi/api/v3/netbanking/my/accounts/%s/transactions/%s',
 
 ];

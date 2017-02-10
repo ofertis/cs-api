@@ -24,6 +24,7 @@ Go to your web projects root directory and type following `composer require zbyn
 ## Usage
 
 ```php
+$configFile = include('./config/sampleConfig.php');
 $csApi = new CSApi\ApiRequester($configFile);
 ```
 
@@ -43,7 +44,7 @@ $response = $csApi->apiRequest($apiUrl, $urlParameters);
 ```
 
 > Requests account transaction history and returns data object (API response run through json_decode),
-> 'query' key is transformed into http query.
+> Content of 'query' key will be transformed into http query.
 
 ```php
 $apiUrl = 'urlTransactions';
