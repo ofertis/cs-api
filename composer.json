@@ -1,6 +1,6 @@
 {
-    "name": "zbynek/cs-api",
-    "description": "Library to access Ceska sporitelna Netbanking V3 API",
+    "name": "ofertis/cs-api",
+    "description": "Library to access Ceska sporitelna API",
     "type": "package",
     "authors": [
         {

@@ -19,7 +19,7 @@ class ApiRequester extends CSApi
 
         $url = vsprintf($this->config[$apiUrl], $this->buildQuery($urlParameters));
         $postFields = $postData ? json_encode($postData) : null;
-        $httpHeader[] = "WEB-API-key: " . $this->config['webApiKey'];
+        $httpHeader[] = "web-api-key: " . $this->config['webApiKey'];
         $httpHeader[] = "Authorization: " . $tokenType . ' ' . $accessToken;
         $httpHeader[] = isset($postData) ? "Content-Type: application/json" : "";
 
