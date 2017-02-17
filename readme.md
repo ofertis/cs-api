@@ -19,7 +19,7 @@ GPL-3.0+
 
 ## Installation
 
-Go to your web projects root directory and type following `composer require zbynek/cs-api` command.
+Go to your web projects root directory and type following `composer require ???/cs-api` command.
 
 ## Usage
 
@@ -30,6 +30,27 @@ $csApi = new CSApi\ApiRequester($configFile);
 
 > Initializes instance of CSApi object and starts authentication process with CS API server.
 > A configuration file is required. You can find a sample for sandbox API in config/ folder.
+
+```php
+$accessToken = $csApi->getAccessToken();
+
+```
+
+> You can retrieve access token parameters to store and use later
+
+```php
+$accessToken = [
+    'access_token' => 'f0e4285e0a4891ecae0f3bc83eec4826',
+    'refresh_token' => 'cc2a45ac7a24985368169c1312195b30',
+    'expires' => 1487326078,
+    'token_type' => 'Bearer',
+];
+$configFile = include('./config/sampleConfig.php');
+$csApi = new CSApi\ApiRequester($configFile, $accessToken);
+
+```
+
+> Use retrieved access token parameters this way so you don't need to go through the authentication process again.
 
 ```php
 $apiUrl = 'urlTransactionHistory';

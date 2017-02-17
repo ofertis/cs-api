@@ -6,13 +6,14 @@ use League\OAuth2\Client\Token\AccessToken;
 class OAuthAuthorization
 {
     /**
-     * Calls access token provider and returns AccessToken
+     * Calls access token provider and stores it in sessions
      *
      * @param array $config
+     * @param array $accessToken
      *
-     * @return AccessToken
+     * @return array
      */
-    public static function callAccessTokenProvider(array $config)
+    public static function callAccessTokenProvider(array $config, array $accessToken)
     {
         $provider = new GenericProvider([
             'clientId'                => $config['clientId'],
@@ -23,37 +24,37 @@ class OAuthAuthorization
             'urlResourceOwnerDetails' => $config['urlResourceOwnerDetails'],
         ]);
 
-        if(isset($_SESSION['accessToken']))
-        {
-            $accessToken = unserialize($_SESSION['accessToken']);
+        if (
+            isset($accessToken['access_token']) &&
+            isset($accessToken['refresh_token']) &&
+            isset($accessToken['token_type']) &&
+            isset($accessToken['expires']) &&
+            $accessToken['expires'] < time()
+        ){
+            $newAccessToken = self::refreshAccessToken($provider, $accessToken['refresh_token']);
 
-            // Check if the access token has expired
-            if($accessToken->hasExpired())
-            {
-                // Check if the refresh token is null
-                if($accessToken->getRefreshToken())
-                {
-                    $accessToken = self::refreshAccessToken($provider, $accessToken);
-                }
-                else
-                {
-                    $accessToken = self::requestNewAccessToken($provider);
-                }
-
-                $_SESSION['accessToken'] = serialize($accessToken);
-            }
+            $accessToken['access_token'] = $newAccessToken->getToken();
+            $accessToken['expires'] = $newAccessToken->getExpires();
         }
-        else
-        {
-            $accessToken = self::requestNewAccessToken($provider);
+        else if(
+            !isset($accessToken['access_token']) ||
+            !isset($accessToken['token_type']) ||
+            !isset($accessToken['expires']) ||
+            (isset($accessToken['expires']) && $accessToken['expires'] < time())
+        ){
+            $newAccessToken = self::requestNewAccessToken($provider);
+
+            $accessToken['access_token'] = $newAccessToken->getToken();
+            $accessToken['refresh_token'] = $newAccessToken->getRefreshToken();
+            $accessToken['expires'] = $newAccessToken->getExpires();
+            $accessToken['token_type'] = $newAccessToken->getValues()['token_type'];
         }
 
-        $_SESSION['accessToken'] = serialize($accessToken);
         return $accessToken;
     }
 
     /**
-     * Calls access token provider and returns new AccessToken
+     * Calls access token provider and returns new access token parameters
      *
      * @param GenericProvider $provider
      *
@@ -76,32 +77,22 @@ class OAuthAuthorization
             ];
             $authorizationUrl = $provider->getAuthorizationUrl($options);
 
-            // Get the state generated for you and store it to the session.
-            $_SESSION['oauth2state'] = $provider->getState();
-
             // Redirect the user to the authorization URL.
             header('Location: ' . $authorizationUrl);
             exit;
 
 
         }
-        // Check given state against previously stored one to mitigate CSRF attack
-        /*
-        elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
-
-            unset($_SESSION['oauth2state']);
-            exit('Invalid state');
-
-        }*/
         else {
 
             try {
 
                 // Try to get an access token using the authorization code grant.
-                $accessToken = $provider->getAccessToken('authorization_code', [
+                $newAccessToken = $provider->getAccessToken('authorization_code', [
                     'code' => $_GET['code']
                 ]);
-                return $accessToken;
+
+                return $newAccessToken;
 
             } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
@@ -114,23 +105,19 @@ class OAuthAuthorization
     }
 
     /**
-     * Calls access token provider and returns refreshed AccessToken
+     * Calls access token provider and returns refreshed access token parameters
      *
      * @param GenericProvider $provider
-     * @param AccessToken $accessToken
+     * @param $refreshToken
      *
-     * @return AccessToken
+     * return AccessToken
      */
 
-    public static function refreshAccessToken(GenericProvider $provider, AccessToken $accessToken)
+    public static function refreshAccessToken(GenericProvider $provider, $refreshToken)
     {
         $newAccessToken = $provider->getAccessToken('refresh_token', [
-            'refresh_token' => $accessToken->getRefreshToken(),
+            'refresh_token' => $refreshToken,
         ]);
-        $refObject   = new \ReflectionObject( $newAccessToken );
-        $refProperty = $refObject->getProperty( 'refreshToken' );
-        $refProperty->setAccessible( true );
-        $refProperty->setValue($newAccessToken, $accessToken->getRefreshToken());
 
         return $newAccessToken;
     }

@@ -1,7 +1,5 @@
 <?php namespace CSApi;
 
-use League\OAuth2\Client\Token\AccessToken;
-
 abstract class CSApi
 {
     /**
@@ -12,9 +10,9 @@ abstract class CSApi
     protected $config;
 
     /**
-     * Access token for authentication
+     * Access token parameters for authentication
      *
-     * @var AccessToken
+     * @var array
      */
     protected $accessToken;
 
@@ -22,25 +20,31 @@ abstract class CSApi
      * Initializes CSApi and starts authentication process
      *
      * @param array $config
+     * @param array $accessToken
      */
-    public function __construct(array $config)
+    public function __construct(array $config, $accessToken = false)
     {
         $this->config = $config;
+        $this->accessToken = $accessToken;
         $this->init();
     }
 
     /**
-     * Initialize function - get access token object from provider
+     * @return array
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Initialize function - get access token parameters from provider
      *
      * @return void
      */
     protected function init()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $this->accessToken = OAuthAuthorization::callAccessTokenProvider($this->config);
+        $this->accessToken = OAuthAuthorization::callAccessTokenProvider($this->config, $this->accessToken);
     }
 
     /**

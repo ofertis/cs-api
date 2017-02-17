@@ -14,8 +14,8 @@ class ApiRequester extends CSApi
      */
     public function apiRequest($apiUrl, array $urlParameters = [], array $postData = null)
     {
-        $tokenType = $this->accessToken->getValues()['token_type'];
-        $accessToken = $this->accessToken->getToken();
+        $tokenType = $this->accessToken['token_type'];
+        $accessToken = $this->accessToken['access_token'];
 
         $url = vsprintf($this->config[$apiUrl], $this->buildQuery($urlParameters));
         $postFields = $postData ? json_encode($postData) : null;
