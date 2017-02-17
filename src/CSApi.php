@@ -20,7 +20,7 @@ abstract class CSApi
      * Initializes CSApi and starts authentication process
      *
      * @param array $config
-     * @param array $accessToken
+     * @param mixed $accessToken
      */
     public function __construct(array $config, $accessToken = false)
     {

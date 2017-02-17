@@ -9,11 +9,11 @@ class OAuthAuthorization
      * Calls access token provider and stores it in sessions
      *
      * @param array $config
-     * @param array $accessToken
+     * @param mixed $accessToken
      *
      * @return array
      */
-    public static function callAccessTokenProvider(array $config, array $accessToken)
+    public static function callAccessTokenProvider(array $config, $accessToken = false)
     {
         $provider = new GenericProvider([
             'clientId'                => $config['clientId'],
